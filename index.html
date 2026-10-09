@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TM UTM Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: form các bước bên trái, khung link ghép trực tiếp dính bên phải; điện thoại xếp 1 cột */
+:root {
+  --bg: #f3f5f4;
+  --surface: #ffffff;
+  --ink: #15201d;
+  --muted: #5d6b67;
+  --line: #d8dfdc;
+  --accent: #0b6b5a;
+  --accent-ink: #ffffff;
+  --warn: #9a5b00;
+  --warn-bg: #fff4e2;
+  --p-source: #1f5fbf;
+  --p-medium: #0b6b5a;
+  --p-campaign: #8a3fb0;
+  --p-content: #b0461d;
+  --p-product: #6b6b00;
+  --p-person: #b0285c;
+  --font-ui: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1513; --surface: #17201d; --ink: #e6eeeb; --muted: #95a5a0; --line: #2a3632;
+    --accent: #3fc2a5; --accent-ink: #06231c; --warn: #f2b45c; --warn-bg: #2c2210;
+    --p-source: #7fb0ff; --p-medium: #4fd1b3; --p-campaign: #d39cf2; --p-content: #ff9d74; --p-product: #d8d86a; --p-person: #ff8fb7;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1513; --surface: #17201d; --ink: #e6eeeb; --muted: #95a5a0; --line: #2a3632;
+  --accent: #3fc2a5; --accent-ink: #06231c; --warn: #f2b45c; --warn-bg: #2c2210;
+  --p-source: #7fb0ff; --p-medium: #4fd1b3; --p-campaign: #d39cf2; --p-content: #ff9d74; --p-product: #d8d86a; --p-person: #ff8fb7;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 48px; }
+header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 24px; margin-bottom: 24px; }
+h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.01em; margin: 0; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); max-width: 60ch; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 440px); gap: 24px; align-items: start; }
+@media (max-width: 880px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+form.card { padding: 4px 0; }
+fieldset { border: 0; margin: 0; padding: 18px 22px; border-top: 1px solid var(--line); min-width: 0; }
+fieldset:first-child { border-top: 0; }
+legend { padding: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; gap: 8px; align-items: center; }
+legend .param { font-family: var(--font-mono); text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 12px; }
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+label { font-size: 13px; font-weight: 500; }
+.hint { font-size: 12.5px; color: var(--muted); margin: 0; }
+input, select { font: inherit; font-size: 14.5px; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; width: 100%; min-width: 0; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.code { font-family: var(--font-mono); font-size: 12.5px; color: var(--muted); word-break: break-all; }
+.seg { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.seg button:disabled { opacity: .4; cursor: not-allowed; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+.meta b { color: var(--ink); font-weight: 500; }
+aside { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); display: flex; flex-direction: column; gap: 16px; }
+.out { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
+.out h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0; font-weight: 600; }
+.url { font-family: var(--font-mono); font-size: 13px; line-height: 1.7; word-break: break-all; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; min-height: 64px; color: var(--muted); }
+.url .v { font-weight: 500; }
+.k-source { color: var(--p-source); } .k-medium { color: var(--p-medium); } .k-campaign { color: var(--p-campaign); }
+.k-content { color: var(--p-content); } .k-product { color: var(--p-product); } .k-person { color: var(--p-person); }
+.actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 8px; padding: 10px 16px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 500; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
+td:first-child { font-family: var(--font-mono); width: 42%; padding-right: 10px; }
+td:last-child { font-family: var(--font-mono); word-break: break-all; }
+td.empty { color: var(--muted); font-family: var(--font-ui); }
+.warns { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.warns li { background: var(--warn-bg); color: var(--warn); border-radius: 6px; padding: 7px 10px; font-size: 13px; }
+.history { padding: 16px 22px; }
+.history h2 { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; font-weight: 600; }
+.history ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.history li { display: flex; gap: 10px; align-items: flex-start; }
+.history li > div { min-width: 0; flex: 1; }
+.history .lbl { font-size: 13px; font-weight: 500; }
+.history .mini { font-family: var(--font-mono); font-size: 11.5px; color: var(--muted); word-break: break-all; }
+.history button { font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 400; color: var(--muted); cursor: pointer; }
+.check input { width: auto; }
+.url.pending { font-family: var(--font-ui); font-size: 14px; }
+.empty-note { color: var(--muted); font-size: 13px; margin: 0; }
+.toast { font-size: 13px; color: var(--accent); min-height: 1.2em; }
+@media (prefers-reduced-motion: no-preference) { .seg button, .btn { transition: background .15s, border-color .15s; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>TM UTM Builder</h1>
+    <p>Điền đủ các mục để tạo link đúng Quy chuẩn UTM. Tiêu đề, chiến dịch và người tư vấn gõ tiếng Việt bình thường, công cụ tự bỏ dấu và nối bằng dấu gạch dưới.</p>
+  </header>
+
+  <div class="grid">
+    <form class="card" id="f" autocomplete="off">
+      <fieldset>
+        <legend>1 · Trang đích</legend>
+        <div class="field">
+          <label for="landing">Link trang khóa học / trang đích</label>
+          <input id="landing" type="url" inputmode="url" placeholder="https://www.tomorrowmarketers.org/data-school">
+          <p class="hint">UTM cũ có sẵn trên link sẽ được thay bằng UTM mới.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2 · Kênh <span class="param k-source">utm_source</span><span class="param k-medium">utm_medium</span></legend>
+        <div class="row">
+          <div class="field">
+            <label for="channel">Kênh đăng link</label>
+            <select id="channel"></select>
+          </div>
+          <div class="field" id="chOtherWrap" hidden>
+            <label for="chSrcOther">Nền tảng (utm_source)</label>
+            <input id="chSrcOther" placeholder="Ví dụ: Threads">
+            <label for="chMedOther">Tài khoản / kênh (utm_medium)</label>
+            <input id="chMedOther" placeholder="Ví dụ: threads_tm">
+            <p class="hint code" id="chOtherSlug"></p>
+          </div>
+          <div class="field" id="srcWrap" hidden>
+            <label for="src">Nền tảng</label>
+            <select id="src"></select>
+            <input id="srcOther" placeholder="Nhập nền tảng khác" hidden>
+            <p class="hint code" id="srcOtherSlug"></p>
+          </div>
+        </div>
+        <div class="meta" id="chMeta"></div>
+      </fieldset>
+
+      <fieldset id="fsCampaign">
+        <legend>3 · Chiến dịch <span class="param k-campaign">utm_campaign</span></legend>
+        <div class="row">
+          <div class="field">
+            <label for="campaign">Chiến dịch / tuyến bài</label>
+            <input id="campaign" placeholder="Ví dụ: Thực hành đọc số">
+            <p class="hint code" id="campaignSlug"></p>
+            <label class="check"><input type="checkbox" id="noCampaign"> Bài không thuộc chiến dịch / tuyến bài nào</label>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="fsContent">
+        <legend>4 · Nội dung <span class="param k-content">utm_content</span></legend>
+        <div class="field" id="posWrap">
+          <label>Vị trí link</label>
+          <div class="seg" id="pos" role="group" aria-label="Vị trí link"></div>
+          <p class="hint" id="posHint"></p>
+        </div>
+        <div class="row" id="contentFields" style="margin-top:14px">
+          <div class="field" id="prefixWrap">
+            <label for="prefix">Loại nội dung</label>
+            <select id="prefix"></select>
+            <input id="prefixOther" placeholder="Nhập loại nội dung khác" hidden>
+            <p class="hint code" id="prefixOtherSlug"></p>
+          </div>
+          <div class="field">
+            <label for="title">Tiêu đề bài (gõ tiếng Việt bình thường)</label>
+            <input id="title" placeholder="Ví dụ: Tổng hợp metrics">
+            <p class="hint code" id="titleSlug"></p>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>5 · Khóa học &amp; người tư vấn <span class="param k-product">utm_product</span><span class="param k-person">utm_person</span></legend>
+        <div class="row">
+          <div class="field">
+            <label for="product">Khóa học</label>
+            <select id="product"></select>
+            <input id="productOther" placeholder="Nhập tên khóa học" hidden>
+            <p class="hint code" id="productOtherSlug"></p>
+          </div>
+          <div class="field" id="personWrap" hidden>
+            <label for="person">Người tư vấn (không bắt buộc)</label>
+            <input id="person" list="personList" placeholder="Ví dụ: yen">
+            <datalist id="personList"></datalist>
+            <p class="hint code" id="personSlug"></p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
+    <aside>
+      <section class="card out" aria-live="polite">
+        <h2>Link hoàn chỉnh</h2>
+        <div class="url" id="url"></div>
+        <ul class="warns" id="warns"></ul>
+        <div class="actions">
+          <button type="button" class="btn" id="copy">Copy link</button>
+          <button type="button" class="btn ghost" id="reset">Làm lại</button>
+        </div>
+        <div class="toast" id="toast"></div>
+        <table id="params"></table>
+      </section>
+      <section class="card history">
+        <h2>Link vừa tạo trên máy này</h2>
+        <ol id="hist"></ol>
+        <p class="empty-note" id="histEmpty">Chưa có link nào. Bấm Copy link để lưu lại ở đây.</p>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<script>
+// ===== Dữ liệu lấy từ Quy chuẩn UTM =====
+// pos: các vị trí link được phép trên kênh ('' = thân bài / caption)
+const CHANNELS = [
+  { g: "Fanpage", s: "facebook", m: "fanpage_tm", name: "Tomorrow Marketers Academy", pos: ["", "cmt"] },
+  { g: "Fanpage", s: "facebook", m: "fanpage_tm_community", name: "Tomorrow Marketers Academy (team Community)", pos: ["", "cmt"] },
+  { g: "Fanpage", s: "facebook", m: "fanpage_ba", name: "Data & AI Strategy", pos: ["", "cmt"] },
+  { g: "Fanpage", s: "facebook", m: "fanpage_tmai", name: "TM AI Academy", pos: ["", "cmt"] },
+  { g: "Group", s: "facebook", m: "group_inhouse", name: "500 anh em Marketing Inhouse", pos: ["", "cmt"] },
+  { g: "Group", s: "facebook", m: "group_bc", name: "Business & Marketing Case", pos: ["", "cmt"] },
+  { g: "Group", s: "facebook", m: "group_strategy", name: "Brand Strategy & Business Growth Hub", pos: ["", "cmt"] },
+  { g: "Group", s: "facebook", m: "group_connect", name: "Group cựu học viên", pos: ["", "cmt"] },
+  { g: "Broadcast", s: "facebook", m: "broadcast_case", name: "Case Playground @TM", pos: [""] },
+  { g: "Broadcast", s: "facebook", m: "broadcast_data", name: "Data & AI Strategy @TM", pos: [""] },
+  { g: "Broadcast", s: "facebook", m: "broadcast_mktworld", name: "Marketing World @TM", pos: [""] },
+  { g: "Broadcast", s: "facebook", m: "broadcast_growth", name: "Strategy & Growth @TM", pos: [""] },
+  { g: "Broadcast", s: "instagram", m: "broadcast_creativehub", name: "TM Creative Hub (Instagram)", pos: [""] },
+  { g: "Instagram", s: "instagram", m: "instagram_tm", name: "tomorrow.marketers", pos: ["", "bio", "cmt"] },
+  { g: "TikTok", s: "tiktok", m: "tiktok_tma", name: "Tomorrow Marketers Academy", pos: ["bio"] },
+  { g: "TikTok", s: "tiktok", m: "tiktok_dai", name: "Data AI không drama", pos: ["bio"] },
+  { g: "TikTok", s: "tiktok", m: "tiktok_zoe", name: "Tóc Hồng Giải Mã – Zoe", pos: ["bio"] },
+  { g: "YouTube", s: "youtube", m: "youtube_tma", name: "Tomorrow Marketers Academy", pos: ["description", "bio", "cmt"] },
+  { g: "YouTube", s: "youtube", m: "youtube_zoe", name: "Tóc Hồng Giải Mã – Zoe", pos: ["description", "bio", "cmt"] },
+  { g: "LinkedIn", s: "linkedin", m: "linkedin_tm", name: "Tomorrow Marketers", pos: ["", "cmt"] },
+  { g: "LinkedIn", s: "linkedin", m: "linkedin_data", name: "Data & AI Strategy", pos: ["", "cmt"] },
+  { g: "LinkedIn", s: "linkedin", m: "linkedin_zoe", name: "Zoe (cá nhân)", pos: ["", "cmt"] },
+  { g: "Substack", s: "substack", m: "substack_analytics", name: "Analytics & AI Strategy", pos: ["", "cmt"] },
+  { g: "Substack", s: "substack", m: "substack_career", name: "Career Guide", pos: ["", "cmt"] },
+  { g: "Substack", s: "substack", m: "substack_strategy", name: "Strategy & Growth", pos: ["", "cmt"] },
+  { g: "Substack", s: "substack", m: "substack_zoe", name: "Zoe (cá nhân)", pos: ["", "cmt"] },
+  { g: "Email", s: "email", m: "email_newsletter", name: "Newsletter, email bán hàng", pos: [""], prefixOptional: true },
+  { g: "Email", s: "email", m: "email_automation", name: "Chuỗi email tự động", pos: [""], prefixOptional: true },
+  { g: "Ebook", s: "ebook", m: "ebook_ldp", name: "Landing page ebook", pos: [""], prefixOptional: true },
+  { g: "Ebook", s: "ebook", m: "ebook_pdf", name: "Link trong file ebook", pos: [""], prefixOptional: true },
+  { g: "Blog", s: "blog", m: "anchor_text", name: "Blog: link chữ trong bài", pos: [""], prefixOptional: true },
+  { g: "Blog", s: "blog", m: "banner", name: "Blog: ảnh trong bài", pos: [""], prefixOptional: true },
+  { g: "Blog", s: "blog", m: "bottom_banner", name: "Blog: banner cuối bài", pos: [""], prefixOptional: true },
+  { g: "Paid", s: null, m: "cpc", name: "Quảng cáo trả tiền", kind: "paid", sources: ["facebook", "tiktok", "google"] },
+  { g: "Sales & Service", s: null, m: "sales", name: "Lead từ nguồn của Sales", kind: "sales", sources: ["facebook", "instagram", "zalo", "email"] },
+  { g: "Sales & Service", s: null, m: "service", name: "Lead từ nguồn của Service", kind: "service", sources: ["facebook", "instagram", "zalo", "group_connect", "circle", "email"] },
+  { g: "Khác", s: null, m: null, name: "Kênh khác", kind: "other" }
+];
+const CAMPAIGNS = ["promotion_tet", "case_playlist", "career_hub", "marketing_nganh_hang", "thuc_hanh_doc_so", "review_cv_with_tm"];
+const PREFIXES = [
+  ["sales", "Bài bán khóa học"], ["distribution_link", "Bài phân phối link"], ["kien_thuc", "Bài kiến thức"],
+  ["testimonial", "Cảm nhận học viên"], ["creative", "Bài sáng tạo, viral"], ["news", "Tin tức"], ["countdown", "Đếm ngược"], ["event", "Sự kiện"]
+];
+// Danh sách account Base của sale/service: thêm tên vào đây khi có người mới
+const PEOPLE = ["yen"];
+const POS_LABEL = { "": "Thân bài / caption", bio: "Bio", description: "Mô tả video", cmt: "Comment" };
+// Danh sách khóa học: [tên khóa, mã utm_product]
+const PRODUCTS = {
+  "Marketing": [["Marketing Foundation", "marketing_foundation"], ["AI Digital Marketing", "digital_foundation"],
+    ["Performance Marketing", "digital_performance"], ["Content Marketing", "content_marketing"],
+    ["Advanced AI Marketer", "advanced_ai_marketer"], ["Digital Marketing Manager Program", "dmm_program"]],
+  "Sinh viên (Case/MT)": [["Case Mastery", "case_mastery"]],
+  "Executive Education": [["Brand Development", "brand_development"], ["Consumer Psychology", "consumer_psychology"],
+    ["Strategy Formulation", "strategy_formulation"], ["Decision Science", "decision_science"],
+    ["AI CEO Program", "ceo_program"], ["CMO Program", "cmo_program"]],
+  "TM AI": [["Generative & Agentic AI", "generative_ai"], ["AI Marketing", "ai_marketing"],
+    ["Transform Organization with AI", "transform_ai"], ["AI Marketing & Sales System", "ai_marketing_sales_system"],
+    ["AI Professional Program", "ai_program"], ["AI Kids – Bách Khoa", "ai_kids"]],
+  "Data": [["Power BI & AI for Data Analytics", "data_analysis"], ["Excel & AI for Data Analytics", "excel"],
+    ["Analytics for Strategy", "analytics_for_strategy"], ["Database Systems for AI & Automation", "sql"],
+    ["AI & Machine Learning with Python", "python"], ["Professional Data Analyst Program", "pda_program"]]
+};
+const ORGANIC_SOCIAL = ["Fanpage", "Group", "Broadcast", "Instagram", "TikTok", "YouTube", "LinkedIn", "Substack"];
+
+// ===== Tiện ích =====
+const $ = id => document.getElementById(id);
+// Chuyển tiếng Việt có dấu thành mã: bỏ dấu, đ→d, viết thường, ký tự khác thành "_"
+function slug(t) {
+  return (t || "").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/đ/g, "d").replace(/Đ/g, "d").toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_").replace(/^_+|_+$/g, "");
+}
+function opt(value, text) { const o = document.createElement("option"); o.value = value; o.textContent = text; return o; }
+
+// ===== Đổ dữ liệu vào form =====
+(function fill() {
+  const ch = $("channel"); let grp = null, og = null;
+  ch.appendChild(opt("", "Chọn kênh đăng link"));
+  CHANNELS.forEach((c, i) => {
+    if (c.g !== grp) { grp = c.g; og = document.createElement("optgroup"); og.label = grp; ch.appendChild(og); }
+    og.appendChild(opt(i, c.kind === "other" ? "Kênh khác — tự điền" : `${c.name} — ${c.m}`));
+  });
+  const pf = $("prefix");
+  pf.appendChild(opt("", "Chọn loại nội dung"));
+  PREFIXES.forEach(([v, t]) => pf.appendChild(opt(v, `${t} — ${v}`)));
+  pf.appendChild(opt("__other", "Khác — tự điền"));  const ps = $("personList");
+  PEOPLE.forEach(p => ps.appendChild(opt(p, p)));
+  const pr = $("product");
+  pr.appendChild(opt("", "Chọn khóa học"));
+  pr.appendChild(opt("__none", "Không gắn khóa cụ thể"));
+  pr.appendChild(opt("__other", "Khóa khác — tự điền"));
+  Object.entries(PRODUCTS).forEach(([g, list]) => {
+    const o = document.createElement("optgroup"); o.label = g;
+    list.forEach(([name, code]) => o.appendChild(opt(code, `${name} — ${code}`))); pr.appendChild(o);
+  });
+})();
+
+let position = "";
+
+// Mở trang với form trống: người dùng phải tự chọn đủ từng mục
+function applyDefaults() {
+  ["landing", "channel", "campaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther"].forEach(id => $(id).value = "");
+  $("noCampaign").checked = false;
+  position = "";
+  onChannel();
+}
+
+function current() { const v = $("channel").value; return v === "" ? null : CHANNELS[+v]; }
+
+function onChannel() {
+  const c = current();
+  if (!c) {
+    $("srcWrap").hidden = true; $("posWrap").hidden = true; $("personWrap").hidden = true; $("chOtherWrap").hidden = true;
+    $("fsCampaign").hidden = false; $("fsContent").hidden = false; $("contentFields").hidden = false; $("prefixWrap").hidden = false;
+    $("chMeta").innerHTML = "";
+    return build();
+  }
+  $("posWrap").hidden = false;
+  $("chOtherWrap").hidden = c.kind !== "other";
+  // Nền tảng phụ cho Paid / Sales / Service
+  const sw = $("srcWrap"), src = $("src");
+  if (c.sources) {
+    const prev = src.value; src.innerHTML = "";
+    src.appendChild(opt("", "Chọn nền tảng"));
+    c.sources.forEach(s => src.appendChild(opt(s, s)));
+    src.appendChild(opt("__other", "Khác — tự điền"));
+    if (c.sources.includes(prev) || prev === "__other") src.value = prev;
+    sw.hidden = false;
+  } else sw.hidden = true;
+
+  const isSales = c.kind === "sales" || c.kind === "service";
+  $("fsCampaign").hidden = isSales;
+  $("fsContent").hidden = isSales;
+  $("personWrap").hidden = !isSales;
+  $("personWrap").querySelector("label").textContent = "Người tư vấn (không bắt buộc)";
+
+  // Vị trí link
+  const allowed = ["", "bio", "description", "cmt"];
+  const seg = $("pos"); seg.innerHTML = "";
+  ["", "bio", "description", "cmt"].forEach(p => {
+    const b = document.createElement("button"); b.type = "button";
+    b.textContent = POS_LABEL[p]; b.setAttribute("aria-pressed", String(p === position));
+    b.addEventListener("click", () => { position = p; onChannel(); });
+    seg.appendChild(b);
+  });
+  $("posWrap").hidden = c.kind === "paid";
+  $("posHint").textContent = position === "bio" ? "Link bio không gắn với bài cụ thể, nên content chỉ ghi bio." :
+    position === "" ? "Link trong thân bài / caption là mặc định, không ghi vị trí." : "";
+  $("contentFields").hidden = position === "bio";
+  $("prefixWrap").hidden = c.kind === "paid";
+
+  // Thông tin kênh
+  const meta = $("chMeta");
+  meta.innerHTML = "";
+  (c.kind === "other" ? [["Nhóm", "Khác"]] : [["Nhóm", c.g], ["Tài khoản", c.name]]).forEach(([k, v]) => {
+    const s = document.createElement("span"); s.innerHTML = `${k}: <b></b>`; s.querySelector("b").textContent = v; meta.appendChild(s);
+  });
+  build();
+}
+
+function build() {
+  const c = current();
+  const missing = [], warns = [];
+  const isSales = !!c && (c.kind === "sales" || c.kind === "service");
+  const isPaid = !!c && c.kind === "paid";
+  let customUsed = false;
+  // Đọc ô "Khác": hiện ô gõ tay khi chọn __other, trả về mã đã bỏ dấu
+  function pick(selId, otherId) {
+    const v = $(selId).value, other = v === "__other";
+    $(otherId).hidden = !other;
+    const sl = other ? slug($(otherId).value) : "";
+    $(otherId + "Slug").textContent = other && sl ? "→ " + sl : "";
+    if (other) customUsed = true;
+    return { v, other, val: other ? sl : v };
+  }
+  let source = "", medium = "";
+  if (c && c.kind === "other") {
+    source = slug($("chSrcOther").value); medium = slug($("chMedOther").value);
+    $("chOtherSlug").textContent = source || medium ? `→ ${source || "…"} / ${medium || "…"}` : "";
+    customUsed = true;
+  } else if (c && c.sources) {
+    const r = pick("src", "srcOther"); source = r.val;
+  } else if (c) { source = c.s; medium = c.m; }
+  if (c && c.kind !== "other") medium = c.m;
+
+  // Trang đích
+  let base = $("landing").value.trim();
+  let u = null;
+  if (base && !/^https?:\/\//i.test(base)) base = "https://" + base;
+  if (base) { try { u = new URL(base); } catch (e) { u = null; } }
+  if (!base) missing.push("Nhập link trang đích.");
+  else if (!u) missing.push("Link trang đích chưa đúng định dạng.");
+
+  if (!c) missing.push("Chọn kênh đăng link.");
+  else if (c.kind === "other") {
+    if (!source) missing.push("Điền nền tảng (utm_source) cho kênh khác.");
+    if (!medium) missing.push("Điền tài khoản / kênh (utm_medium) cho kênh khác.");
+  }
+  else if (c.sources && !source) missing.push($("src").value === "__other" ? "Điền nền tảng khác." : "Chọn nền tảng.");
+
+  // Chiến dịch: bắt buộc điền, hoặc tích "không thuộc chiến dịch nào"
+  let campaign = "";
+  const noCamp = $("noCampaign").checked;
+  $("campaign").disabled = noCamp;
+  if (!isSales) {
+    campaign = noCamp ? "" : slug($("campaign").value);
+    const raw = $("campaign").value.trim();
+    $("campaignSlug").textContent = !noCamp && campaign && campaign !== raw ? "→ " + campaign : "";
+    if (!noCamp && !campaign) missing.push("Điền chiến dịch, hoặc tích ô “không thuộc chiến dịch nào”.");
+  }
+
+  // Nội dung
+  let content = "";
+  const t = slug($("title").value);
+  $("titleSlug").textContent = t ? "→ " + t : "";
+  if (!isSales) {
+    if (position === "bio" && c) content = "bio";
+    else {
+      const pr = pick("prefix", "prefixOther");
+      const preVal = pr.v;
+      const pre = isPaid || preVal === "__none" ? "" : pr.val;
+      if (!isPaid && pr.other && !pr.val) missing.push("Điền loại nội dung khác.");
+      if (!isPaid) {
+        if (!preVal) missing.push("Chọn loại nội dung.");
+        else if (preVal === "__none" && c && ORGANIC_SOCIAL.includes(c.g)) missing.push("Bài trên mạng xã hội phải chọn một loại nội dung cụ thể.");
+      }
+      if (!t) missing.push(isPaid ? "Điền tiêu đề mẫu quảng cáo." : "Điền tiêu đề bài.");
+      if (t && t.split("_").length > 6) warns.push("Tiêu đề dài hơn 6 từ. Nên rút gọn để link dễ đọc trong báo cáo.");
+      content = [position, pre, t].filter(Boolean).join("_");
+    }
+  }
+
+  // Khóa học, người tư vấn
+  const pp = pick("product", "productOther");
+  const prodVal = pp.v;
+  const product = prodVal === "__none" ? "" : pp.val;
+  if (pp.other && !pp.val) missing.push("Điền tên khóa học khác.");
+  if (!prodVal) missing.push("Chọn khóa học, hoặc chọn “Không gắn khóa cụ thể”.");
+  const person = isSales ? slug($("person").value) : "";
+  const rawPerson = $("person").value.trim();
+  $("personSlug").textContent = person && person !== rawPerson ? "→ " + person : "";
+
+  if (customUsed) warns.push("Có mã tự điền chưa nằm trong Quy chuẩn UTM. Nhớ bổ sung vào tài liệu để cả team dùng chung.");
+  const pairs = [["utm_source", source, "source"], ["utm_medium", medium, "medium"], ["utm_campaign", campaign, "campaign"],
+                 ["utm_content", content, "content"], ["utm_product", product, "product"], ["utm_person", person, "person"]];
+
+  const complete = missing.length === 0;
+  let full = "";
+  const urlBox = $("url"); urlBox.innerHTML = "";
+  urlBox.classList.toggle("pending", !complete);
+  if (complete) {
+    // Giữ tham số không phải utm, thay toàn bộ utm cũ
+    const keep = [];
+    u.searchParams.forEach((v, k) => { if (!/^utm_/i.test(k)) keep.push([k, v]); });
+    const used = pairs.filter(p => p[1]);
+    const head = u.origin + u.pathname;
+    const qs = keep.map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      .concat(used.map(([k, v]) => `${k}=${encodeURIComponent(v)}`));
+    full = head + (qs.length ? "?" + qs.join("&") : "") + u.hash;
+
+    urlBox.appendChild(document.createTextNode(head));
+    let first = true;
+    keep.forEach(([k, v]) => { urlBox.appendChild(document.createTextNode((first ? "?" : "&") + k + "=" + v)); first = false; });
+    used.forEach(([k, v, cls]) => {
+      urlBox.appendChild(document.createTextNode((first ? "?" : "&") + k + "="));
+      const sp = document.createElement("span"); sp.className = "v k-" + cls; sp.textContent = v; urlBox.appendChild(sp);
+      first = false;
+    });
+  } else {
+    urlBox.textContent = `Còn ${missing.length} mục chưa điền. Điền đủ thì link mới hiện ra.`;
+  }
+
+  // Bảng tham số
+  const tb = $("params"); tb.innerHTML = "";
+  pairs.forEach(([k, v, cls]) => {
+    const tr = document.createElement("tr");
+    const a = document.createElement("td"); a.textContent = k; a.className = "k-" + cls;
+    const b = document.createElement("td"); b.textContent = v || "—"; if (!v) b.className = "empty";
+    tr.append(a, b); tb.appendChild(tr);
+  });
+
+  const w = $("warns"); w.innerHTML = "";
+  missing.concat(warns).forEach(x => { const li = document.createElement("li"); li.textContent = x; w.appendChild(li); });
+
+  $("copy").disabled = !complete;
+  state.full = full;
+  state.label = c ? `${c.name} · ${content || medium}` : "";
+}
+const state = { full: "", label: "" };
+
+// ===== Lịch sử trên máy (chỉ trình duyệt này) =====
+const HKEY = "tm_utm_history_v1";
+function loadHist() { try { return JSON.parse(localStorage.getItem(HKEY) || "[]"); } catch (e) { return []; } }
+function saveHist(h) { try { localStorage.setItem(HKEY, JSON.stringify(h.slice(0, 12))); } catch (e) {} }
+function renderHist() {
+  const h = loadHist(), ol = $("hist"); ol.innerHTML = "";
+  $("histEmpty").hidden = h.length > 0;
+  h.forEach(item => {
+    const li = document.createElement("li");
+    const d = document.createElement("div");
+    const l = document.createElement("div"); l.className = "lbl"; l.textContent = item.label;
+    const m = document.createElement("div"); m.className = "mini"; m.textContent = item.url;
+    d.append(l, m);
+    const b = document.createElement("button"); b.type = "button"; b.textContent = "Copy";
+    b.addEventListener("click", () => copyText(item.url, b));
+    li.append(d, b); ol.appendChild(li);
+  });
+}
+
+function copyText(text, btn) {
+  const done = () => { $("toast").textContent = "Đã copy link."; setTimeout(() => $("toast").textContent = "", 2200); };
+  const fallback = () => {
+    const r = document.createRange(); r.selectNodeContents($("url"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    $("toast").textContent = "Trình duyệt chặn copy tự động. Link đã được bôi đen, nhấn Ctrl/Cmd + C.";
+  };
+  try {
+    navigator.clipboard.writeText(text).then(done, fallback);
+  } catch (e) { fallback(); }
+}
+
+$("copy").addEventListener("click", () => {
+  if (!state.full) return;
+  copyText(state.full);
+  const h = loadHist().filter(x => x.url !== state.full);
+  h.unshift({ url: state.full, label: state.label });
+  saveHist(h); renderHist();
+});
+$("reset").addEventListener("click", applyDefaults);
+$("channel").addEventListener("change", onChannel);
+["landing", "src", "campaign", "noCampaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther"].forEach(id => {
+  $(id).addEventListener("input", build); $(id).addEventListener("change", build);
+});
+$("f").addEventListener("submit", e => e.preventDefault());
+
+applyDefaults();
+renderHist();
+</script>
+</body>
+</html>
