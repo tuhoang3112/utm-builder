@@ -156,4 +156,4 @@ Khóa mới: lấy tên đầy đủ, viết thường, cách nhau bằng `_`, r
 | Bài Substack cá nhân của Zoe | `…/data-school?utm_source=substack&utm_medium=substack_zoe&utm_content=kien_thuc_he_thong_data_marketing&utm_product=pda_program` |
 | Broadcast Data & AI Strategy | `…/data-school?utm_source=facebook&utm_medium=broadcast_data&utm_content=countdown_early_bird&utm_product=pda_program` |
 | Facebook Ads | `…/data-school?utm_source=facebook&utm_medium=cpc&utm_content=khong_con_so_doc_so&utm_product=pda_program` |
-| Sale gửi link qua inbox Facebook | `…/data-school?utm_source=facebook&utm_medium=sales&utm_person=yen&utm_product=pda_program` |
+| Sale gửi link qua inbox Facebook | `…/data-school?utm_source=facebook&utm_medium=sales&utm_product=pda_program&utm_person=yen` |
