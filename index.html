@@ -57,7 +57,9 @@ header p { margin: 0; color: var(--muted); max-width: 60ch; }
 form.card { padding: 4px 0; }
 fieldset { border: 0; margin: 0; padding: 18px 22px; border-top: 1px solid var(--line); min-width: 0; }
 fieldset:first-child { border-top: 0; }
-legend { padding: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; gap: 8px; align-items: center; }
+fieldset > :not(legend) { clear: both; }
+header a { color: var(--accent); }
+legend { float: left; width: 100%; padding: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; gap: 8px; align-items: center; }
 legend .param { font-family: var(--font-mono); text-transform: none; letter-spacing: 0; font-weight: 500; font-size: 12px; }
 .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px 16px; }
 .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -111,7 +113,7 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
 <div class="wrap">
   <header>
     <h1>TM UTM Builder</h1>
-    <p>Điền đủ các mục để tạo link đúng Quy chuẩn UTM. Tiêu đề, chiến dịch và người tư vấn gõ tiếng Việt bình thường, công cụ tự bỏ dấu và nối bằng dấu gạch dưới.</p>
+    <p>Điền đủ các mục để tạo link đúng <a href="https://github.com/tuhoang3112/utm-builder/blob/main/QUY_CHUAN_UTM.md" target="_blank" rel="noopener">Quy chuẩn UTM</a>. Tiêu đề, chiến dịch và người tư vấn gõ tiếng Việt bình thường, công cụ tự bỏ dấu và nối bằng dấu gạch dưới.</p>
   </header>
 
   <div class="grid">
