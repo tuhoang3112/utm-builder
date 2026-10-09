@@ -156,6 +156,8 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
         <div class="field" id="posWrap">
           <label>Vị trí link</label>
           <div class="seg" id="pos" role="group" aria-label="Vị trí link"></div>
+          <input id="posOther" placeholder="Nhập vị trí khác, ví dụ: Highlight" hidden style="margin-top:8px">
+          <p class="hint code" id="posOtherSlug"></p>
           <p class="hint" id="posHint"></p>
         </div>
         <div class="row" id="contentFields" style="margin-top:14px">
@@ -262,7 +264,8 @@ const PREFIXES = [
 ];
 // Danh sách account Base của sale/service: thêm tên vào đây khi có người mới
 const PEOPLE = ["yen"];
-const POS_LABEL = { "": "Thân bài / caption", bio: "Bio", description: "Mô tả video", cmt: "Comment" };
+const POS_LABEL = { "": "Thân bài / caption", bio: "Bio", description: "Mô tả video", cmt: "Comment", story: "Story", qr: "QR code", __other: "Khác" };
+const POS_LIST = ["", "bio", "description", "cmt", "story", "qr", "__other"];
 // Danh sách khóa học: [tên khóa, mã utm_product]
 const PRODUCTS = {
   "Marketing": [["Marketing Foundation", "marketing_foundation"], ["AI Digital Marketing", "digital_foundation"],
@@ -318,7 +321,7 @@ let position = "";
 
 // Mở trang với form trống: người dùng phải tự chọn đủ từng mục
 function applyDefaults() {
-  ["landing", "channel", "campaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther"].forEach(id => $(id).value = "");
+  ["landing", "channel", "campaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther", "posOther"].forEach(id => $(id).value = "");
   $("noCampaign").checked = false;
   position = "";
   onChannel();
@@ -356,7 +359,7 @@ function onChannel() {
   // Vị trí link
   const allowed = ["", "bio", "description", "cmt"];
   const seg = $("pos"); seg.innerHTML = "";
-  ["", "bio", "description", "cmt"].forEach(p => {
+  POS_LIST.forEach(p => {
     const b = document.createElement("button"); b.type = "button";
     b.textContent = POS_LABEL[p]; b.setAttribute("aria-pressed", String(p === position));
     b.addEventListener("click", () => { position = p; onChannel(); });
@@ -364,7 +367,10 @@ function onChannel() {
   });
   $("posWrap").hidden = c.kind === "paid";
   $("posHint").textContent = position === "bio" ? "Link bio không gắn với bài cụ thể, nên content chỉ ghi bio." :
-    position === "" ? "Link trong thân bài / caption là mặc định, không ghi vị trí." : "";
+    position === "" ? "Link trong thân bài / caption là mặc định, không ghi vị trí." :
+    position === "story" ? "Link qua sticker trên Story Instagram / Facebook." :
+    position === "qr" ? "Link gắn vào mã QR trên ảnh, slide, banner sự kiện hoặc tài liệu in." : "";
+  $("posOther").hidden = position !== "__other";
   $("contentFields").hidden = position === "bio";
   $("prefixWrap").hidden = c.kind === "paid";
 
@@ -445,7 +451,14 @@ function build() {
       }
       if (!t) missing.push(isPaid ? "Điền tiêu đề mẫu quảng cáo." : "Điền tiêu đề bài.");
       if (t && t.split("_").length > 6) warns.push("Tiêu đề dài hơn 6 từ. Nên rút gọn để link dễ đọc trong báo cáo.");
-      content = [position, pre, t].filter(Boolean).join("_");
+      let pos = position;
+      if (position === "__other") {
+        pos = slug($("posOther").value);
+        $("posOtherSlug").textContent = pos ? "→ " + pos : "";
+        if (!pos) missing.push("Điền vị trí link khác.");
+        else customUsed = true;
+      } else $("posOtherSlug").textContent = "";
+      content = [pos, pre, t].filter(Boolean).join("_");
     }
   }
 
@@ -547,7 +560,7 @@ $("copy").addEventListener("click", () => {
 });
 $("reset").addEventListener("click", applyDefaults);
 $("channel").addEventListener("change", onChannel);
-["landing", "src", "campaign", "noCampaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther"].forEach(id => {
+["landing", "src", "campaign", "noCampaign", "prefix", "title", "product", "person", "chSrcOther", "chMedOther", "srcOther", "prefixOther", "productOther", "posOther"].forEach(id => {
   $(id).addEventListener("input", build); $(id).addEventListener("change", build);
 });
 $("f").addEventListener("submit", e => e.preventDefault());
