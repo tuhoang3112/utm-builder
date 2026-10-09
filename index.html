@@ -264,8 +264,8 @@ const PREFIXES = [
 ];
 // Danh sách account Base của sale/service: thêm tên vào đây khi có người mới
 const PEOPLE = ["yen"];
-const POS_LABEL = { "": "Thân bài / caption", bio: "Bio", description: "Mô tả video", cmt: "Comment", story: "Story", qr: "QR code", __other: "Khác" };
-const POS_LIST = ["", "bio", "description", "cmt", "story", "qr", "__other"];
+const POS_LABEL = { "": "Thân bài / caption", bio: "Bio", description: "Mô tả video", cmt: "Comment", story: "Story", __other: "Khác" };
+const POS_LIST = ["bio", "", "description", "cmt", "story", "__other"];
 // Danh sách khóa học: [tên khóa, mã utm_product]
 const PRODUCTS = {
   "Marketing": [["Marketing Foundation", "marketing_foundation"], ["AI Digital Marketing", "digital_foundation"],
@@ -369,7 +369,7 @@ function onChannel() {
   $("posHint").textContent = position === "bio" ? "Link bio không gắn với bài cụ thể, nên content chỉ ghi bio." :
     position === "" ? "Link trong thân bài / caption là mặc định, không ghi vị trí." :
     position === "story" ? "Link qua sticker trên Story Instagram / Facebook." :
-    position === "qr" ? "Link gắn vào mã QR trên ảnh, slide, banner sự kiện hoặc tài liệu in." : "";
+    "";
   $("posOther").hidden = position !== "__other";
   $("contentFields").hidden = position === "bio";
   $("prefixWrap").hidden = c.kind === "paid";

@@ -109,9 +109,8 @@ Source là kênh gửi link, medium là tên team (`sales` / `service`). Link lu
 | `description` | Vị trí: link trong phần mô tả video YouTube. Đứng trước loại nội dung | `description_kien_thuc_bcg_matrix` |
 | `cmt` | Vị trí: link trong comment, mọi nền tảng. Đứng trước loại nội dung | `cmt_sales_khong_con_so_doc_so` |
 | `story` | Vị trí: link qua sticker trên Story Instagram / Facebook. Đứng trước loại nội dung | `story_countdown_early_bird` |
-| `qr` | Vị trí: link gắn vào mã QR trên ảnh, slide, banner sự kiện, tài liệu in. Đứng trước loại nội dung | `qr_event_workshop_data` |
 
-Link nằm trong thân bài / caption là mặc định, không ghi vị trí. Chỉ ghi vị trí khi link nằm chỗ khác (bio, description, cmt, story, qr). Link ở mục giới thiệu trang, Featured hoặc trang kênh tính là `bio`; comment ghim tính là `cmt`. TikTok chỉ có link ở bio, nên link TikTok luôn là `bio`.
+Link nằm trong thân bài / caption là mặc định, không ghi vị trí. Chỉ ghi vị trí khi link nằm chỗ khác (bio, description, cmt, story). Link ở mục giới thiệu trang, Featured hoặc trang kênh tính là `bio`; comment ghim tính là `cmt`. TikTok chỉ có link ở bio, nên link TikTok luôn là `bio`.
 
 Tiền tố mới ngoài danh sách thì thêm vào bảng này trước khi dùng.
 
