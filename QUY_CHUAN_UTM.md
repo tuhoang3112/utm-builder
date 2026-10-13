@@ -29,7 +29,7 @@ GA4 chỉ đọc 5 tham số chuẩn. `utm_product` và `utm_person` không hi�
 **Quy tắc đặt medium:** `<nhóm kênh>_<tài khoản>`, áp dụng cho mọi nền tảng.
 
 - Nền tảng có nhiều loại kênh con (Facebook, Instagram): nhóm kênh là loại kênh, ví dụ `group_inhouse`, `broadcast_creativehub`.
-- Nền tảng chỉ có 1 loại kênh (LinkedIn, TikTok, YouTube, Substack): nhóm kênh là tên nền tảng, ví dụ `linkedin_tm`, `tiktok_dai`.
+- Nền tảng chỉ có 1 loại kênh (LinkedIn, TikTok, YouTube, Substack, Threads): nhóm kênh là tên nền tảng, ví dụ `linkedin_tm`, `tiktok_dai`.
 
 Tên nền tảng lặp lại ở source và medium là cố ý: nhờ vậy mỗi medium là duy nhất trong toàn hệ thống, nhìn 1 cột là biết tài khoản nào. Medium vẫn ghi tài khoản kể cả khi nền tảng hiện chỉ có 1 tài khoản, để mở thêm tài khoản không phải đổi quy tắc.
 
@@ -49,6 +49,7 @@ Tên nền tảng lặp lại ở source và medium là cố ý: nhờ vậy m�
 | facebook | `broadcast_growth` | Strategy & Growth @TM | Broadcast |
 | instagram | `instagram_tm` | tomorrow.marketers | Profile |
 | instagram | `broadcast_creativehub` | TM Creative Hub | Broadcast |
+| threads | `threads_tm` | Tê Mờ công sở (@tm_insight) | Threads |
 | tiktok | `tiktok_tma` | Tomorrow Marketers Academy | TikTok |
 | tiktok | `tiktok_dai` | Data AI không drama | TikTok |
 | tiktok | `tiktok_zoe` | Tóc Hồng Giải Mã – Zoe (cá nhân) | TikTok |
