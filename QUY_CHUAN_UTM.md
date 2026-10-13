@@ -69,13 +69,13 @@ Tên nền tảng lặp lại ở source và medium là cố ý: nhờ vậy m�
 | blog | `anchor_text` | Blog TM: link chữ trong bài | Blog |
 | blog | `banner` | Blog TM: ảnh trong bài | Blog |
 | blog | `bottom_banner` | Blog TM: banner cuối bài | Blog |
-| facebook / tiktok / google | `cpc` | Quảng cáo trả tiền | Paid |
+| facebook | `cpc` | Quảng cáo trả tiền | Paid |
 
 ## Lưu ý cho Paid & Blog
 
 **Paid**
 
-- Medium luôn là `cpc`, không ghi tài khoản. Source là nền tảng chạy ads: `facebook`, `tiktok`, `google`.
+- Medium luôn là `cpc`, không ghi tài khoản. Source là `facebook` (hiện TM chỉ chạy ads trên Facebook / Instagram).
 - `utm_content` là tiêu đề nội dung quảng cáo.
 - Bài sales trên fanpage khi đẩy sang chạy ads: đổi medium sang `cpc` trước khi chạy. Nếu không, traffic trả tiền sẽ bị tính vào organic.
 

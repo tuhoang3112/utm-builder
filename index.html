@@ -233,7 +233,7 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
 // ===== Dữ liệu lấy từ Quy chuẩn UTM =====
 // pos: các vị trí link được phép trên kênh ('' = thân bài / caption)
 const CHANNELS = [
-  { g: "Paid", s: null, m: "cpc", name: "Quảng cáo trả tiền", kind: "paid", sources: ["facebook", "tiktok", "google"] },
+  { g: "Paid", s: null, m: "cpc", name: "Quảng cáo trả tiền", kind: "paid", sources: ["facebook"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_tm", name: "Tomorrow Marketers Academy", pos: ["", "cmt"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_tm_community", name: "Tomorrow Marketers Academy (team Community)", pos: ["", "cmt"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_ba", name: "Data & AI Strategy", pos: ["", "cmt"] },
@@ -362,6 +362,7 @@ function onChannel() {
     c.sources.forEach(s => src.appendChild(opt(s, s)));
     src.appendChild(opt("__other", "Khác — tự điền"));
     if (c.sources.includes(prev) || prev === "__other") src.value = prev;
+    else if (c.sources.length === 1) src.value = c.sources[0];
     sw.hidden = false;
   } else sw.hidden = true;
 
