@@ -72,7 +72,8 @@ aside { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); displ
 .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 8px; padding: 10px 16px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); cursor: pointer; }
 .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 500; }
-.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+a.btn { text-decoration: none; display: inline-flex; align-items: center; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
 td:first-child { font-family: var(--font-mono); width: 42%; padding-right: 10px; }
@@ -201,6 +202,7 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
         <ul class="warns" id="warns"></ul>
         <div class="actions">
           <button type="button" class="btn" id="copy">Copy link</button>
+          <a class="btn ghost" id="shorten" href="https://tinyurl.com/" target="_blank" rel="noopener" aria-disabled="true">Rút gọn bằng TinyURL ↗</a>
           <button type="button" class="btn ghost" id="reset">Làm lại</button>
         </div>
         <div class="toast" id="toast"></div>
@@ -515,6 +517,7 @@ function build() {
   missing.concat(warns).forEach(x => { const li = document.createElement("li"); li.textContent = x; w.appendChild(li); });
 
   $("copy").disabled = !complete;
+  $("shorten").setAttribute("aria-disabled", String(!complete));
   state.full = full;
   state.label = c ? `${c.name} · ${content || medium}` : "";
 }
@@ -554,6 +557,17 @@ function copyText(text, btn) {
 $("copy").addEventListener("click", () => {
   if (!state.full) return;
   copyText(state.full);
+  const h = loadHist().filter(x => x.url !== state.full);
+  h.unshift({ url: state.full, label: state.label });
+  saveHist(h); renderHist();
+});
+// Rút gọn: copy link rồi mở TinyURL ở tab mới, người dùng chỉ cần dán vào ô Long URL
+$("shorten").addEventListener("click", e => {
+  if (!state.full) { e.preventDefault(); return; }
+  const msg = "Đã copy link. Trên TinyURL, dán (Ctrl/Cmd + V) vào ô Long URL rồi bấm Shorten Link.";
+  try {
+    navigator.clipboard.writeText(state.full).then(() => { $("toast").textContent = msg; }, () => { $("toast").textContent = "Chưa copy được tự động. Bấm Copy link trước rồi dán vào TinyURL."; });
+  } catch (err) { $("toast").textContent = "Chưa copy được tự động. Bấm Copy link trước rồi dán vào TinyURL."; }
   const h = loadHist().filter(x => x.url !== state.full);
   h.unshift({ url: state.full, label: state.label });
   saveHist(h); renderHist();
