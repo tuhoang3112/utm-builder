@@ -233,6 +233,7 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
 // ===== Dữ liệu lấy từ Quy chuẩn UTM =====
 // pos: các vị trí link được phép trên kênh ('' = thân bài / caption)
 const CHANNELS = [
+  { g: "Paid", s: null, m: "cpc", name: "Quảng cáo trả tiền", kind: "paid", sources: ["facebook", "tiktok", "google"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_tm", name: "Tomorrow Marketers Academy", pos: ["", "cmt"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_tm_community", name: "Tomorrow Marketers Academy (team Community)", pos: ["", "cmt"] },
   { g: "Fanpage", s: "facebook", m: "fanpage_ba", name: "Data & AI Strategy", pos: ["", "cmt"] },
@@ -267,7 +268,6 @@ const CHANNELS = [
   { g: "Blog", s: "blog", m: "anchor_text", name: "Blog: link chữ trong bài", pos: [""], prefixOptional: true },
   { g: "Blog", s: "blog", m: "banner", name: "Blog: ảnh trong bài", pos: [""], prefixOptional: true },
   { g: "Blog", s: "blog", m: "bottom_banner", name: "Blog: banner cuối bài", pos: [""], prefixOptional: true },
-  { g: "Paid", s: null, m: "cpc", name: "Quảng cáo trả tiền", kind: "paid", sources: ["facebook", "tiktok", "google"] },
   { g: "Sales & Service", s: null, m: "sales", name: "Lead từ nguồn của Sales", kind: "sales", sources: ["facebook", "instagram", "zalo", "email"] },
   { g: "Sales & Service", s: null, m: "service", name: "Lead từ nguồn của Service", kind: "service", sources: ["facebook", "instagram", "zalo", "group_connect", "circle", "email"] },
   { g: "Khác", s: null, m: null, name: "Kênh khác", kind: "other" }
