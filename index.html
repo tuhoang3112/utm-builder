@@ -74,6 +74,10 @@ aside { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); displ
 .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 500; }
 .btn:disabled, .btn[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
 a.btn { text-decoration: none; display: inline-flex; align-items: center; }
+.shorten-box { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.shorten-box h3 { margin: 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.shorten-box ol { margin: 0; padding-left: 18px; font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+.shorten-box b { color: var(--ink); font-weight: 600; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
 td:first-child { font-family: var(--font-mono); width: 42%; padding-right: 10px; }
@@ -202,11 +206,19 @@ td.empty { color: var(--muted); font-family: var(--font-ui); }
         <ul class="warns" id="warns"></ul>
         <div class="actions">
           <button type="button" class="btn" id="copy">Copy link</button>
-          <a class="btn ghost" id="shorten" href="https://tinyurl.com/" target="_blank" rel="noopener" aria-disabled="true">Rút gọn bằng TinyURL ↗</a>
           <button type="button" class="btn ghost" id="reset">Làm lại</button>
         </div>
         <div class="toast" id="toast"></div>
         <table id="params"></table>
+        <div class="shorten-box">
+          <h3>Rút gọn link</h3>
+          <ol>
+            <li>Bấm nút bên dưới. Link vừa tạo được copy sẵn và TinyURL mở ở tab mới.</li>
+            <li>Dán link (Ctrl/Cmd + V) vào ô <b>Long URL</b>, bấm <b>Shorten Link</b>.</li>
+            <li>Copy link ngắn TinyURL trả về để đăng bài.</li>
+          </ol>
+          <a class="btn ghost" id="shorten" href="https://tinyurl.com/" target="_blank" rel="noopener" aria-disabled="true">Rút gọn bằng TinyURL ↗</a>
+        </div>
       </section>
       <section class="card history">
         <h2>Link vừa tạo trên máy này</h2>
