@@ -39,6 +39,7 @@ Tên nền tảng lặp lại ở source và medium là cố ý: nhờ vậy m�
 | facebook | `fanpage_tm_community` | Tomorrow Marketers Academy (team Community) | Fanpage |
 | facebook | `fanpage_ba` | Data & AI Strategy | Fanpage |
 | facebook | `fanpage_tmai` | TM AI Academy | Fanpage |
+| facebook | `fanpage_ee` | Executive Education | Fanpage |
 | facebook | `group_inhouse` | 500 anh em Marketing Inhouse | Group |
 | facebook | `group_bc` | Business & Marketing Case | Group |
 | facebook | `group_strategy` | Brand Strategy & Business Growth Hub | Group |
