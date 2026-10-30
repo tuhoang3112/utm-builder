@@ -55,6 +55,7 @@ Tên nền tảng lặp lại ở source và medium là cố ý: nhờ vậy m�
 | tiktok | `tiktok_dai` | Data AI không drama | TikTok |
 | tiktok | `tiktok_zoe` | Tóc Hồng Giải Mã – Zoe (cá nhân) | TikTok |
 | youtube | `youtube_tma` | Tomorrow Marketers Academy | YouTube |
+| youtube | `youtube_data` | Data & AI Strategy | YouTube |
 | youtube | `youtube_zoe` | Tóc Hồng Giải Mã – Zoe (cá nhân) | YouTube |
 | linkedin | `linkedin_tm` | Tomorrow Marketers | LinkedIn |
 | linkedin | `linkedin_data` | Data & AI Strategy | LinkedIn |
